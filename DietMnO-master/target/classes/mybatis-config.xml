@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.spring.mno.user.domain.MemberVO" alias="member" />
+		<typeAlias type="com.spring.mno.bmi.domain.BmiVO" alias="bmi" />
+		<typeAlias type="com.spring.mno.diet.domain.Diet_info" alias="diet_info" />
+		<typeAlias type="com.spring.mno.user.domain.Dates" alias="Dates" />
+		<typeAlias type="com.spring.mno.rec.domain.Recommendvo" alias="rec" />
+		<typeAlias type="com.spring.mno.diet.domain.paylist" alias="paylist" />
+	</typeAliases>
+	
+</configuration>

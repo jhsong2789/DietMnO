@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.mno.mappers.fooddic">
+<sql id="searchCondition">
+		<if test="searchType != null">
+			<if test="searchType == 't'.toString()">
+				and title like concat('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'c'.toString()">
+				and content like concat('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'w'.toString()">
+				and writer like concat('%', #{keyword}, '%')
+			</if>
+			<if test="searchType == 'tc'.toString()">
+				and (title like concat('%', #{keyword}, '%')
+					or content like concat('%', #{keyword}, '%'))
+			</if>
+			<if test="searchType == 'all'.toString()">
+				and (title like concat('%', #{keyword}, '%')
+					or content like concat('%', #{keyword}, '%')
+					or writer like concat('%', #{keyword}, '%'))
+			</if>
+		</if>
+	</sql>
+	<!-- 게시물 목록 -->
+	<select id="list"
+		resultType="com.spring.mno.fooddic.domain.FoodDicVO">
+		select
+		fbno, title, content, writer, regDate, viewCnt
+		from
+		foodDic
+	</select>
+
+	<!-- 게시물 작성 -->
+	<insert id="write"
+		parameterType="com.spring.mno.fooddic.domain.FoodDicVO">
+		insert into
+		foodDic(title, content, writer, regDate,fileName)
+		values(#{title}, #{content}, #{writer},now(),#{fileName})
+	</insert>
+
+	<!-- 게시물 조회 -->
+	<select id="view" parameterType="int"
+		resultType="com.spring.mno.fooddic.domain.FoodDicVO">
+		select
+		fbno, title, content, writer, regDate, viewCnt, fileName
+		from
+		foodDic
+		where
+		fbno = #{fbno}
+	</select>
+
+	<!-- 게시물 수정 -->
+	<update id="modify"
+		parameterType="com.spring.mno.fooddic.domain.FoodDicVO">
+		update
+		foodDic
+		set
+		title = #{title},
+		content = #{content},
+		writer = #{writer}
+		where fbno = #{fbno}
+	</update>
+
+	<!-- 게시물 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete
+		from foodDic
+		where fbno = #{fbno}
+	</delete>
+	
+	<!-- 게시물 총 개수 -->
+	<select id="gettotalcount" resultType="int">
+		select count(fbno)
+		from foodDic
+		where fbno > 0
+		<include refid="searchCondition"></include>
+	</select>
+	
+
+	<!-- 게시물 목록 + 페이징 -->
+	<select id="listPage"
+		resultType="com.spring.mno.fooddic.domain.FoodDicVO">
+		select
+		*
+		from foodDic
+		where fbno > 0
+		<include refid="searchCondition"></include>
+		order by fbno desc, regDate desc
+		limit #{pageStart}, #{perPageNum}
+	</select>
+	<!-- 조회수 증가 -->
+	<update id="updateViewCnt">
+		update foodDic
+		set viewCnt = viewCnt + 1
+		where fbno = #{fbno}
+	</update>
+	</mapper>
